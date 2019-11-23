@@ -12,8 +12,10 @@
   }
   p {
     font-weight: bolder;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     margin-bottom: 2px;
+    margin-left: auto;
+    margin-right: auto;
     &.break {
       color: rgba(green, 0.9);
     }

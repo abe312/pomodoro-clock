@@ -36,8 +36,7 @@ class Clock extends Component {
     let that = this;
     window.calculate = function(endDate, isBreak = false) {
       let startDate = new Date().getTime();
-      let timeRemaining = parseInt((endDate - startDate) / 1000);
-
+      let timeRemaining = parseInt((endDate - startDate) / 1000) + 1;
       if (timeRemaining >= 0) {
         let minutes = parseInt(timeRemaining / 60);
         let seconds = parseInt(timeRemaining % 60);
@@ -47,6 +46,9 @@ class Clock extends Component {
       } else {
         // this.props.setSession();
         // this.setSessionTime();
+        let alarm = document.getElementById('bell');
+        alarm.currentTime = 0;
+        alarm.play();
         if (isBreak) {
           that.clear();
           that.setSessionTime();
@@ -126,7 +128,7 @@ class Clock extends Component {
     return (
       <>
         <div className='clock-digital'>
-          <p className={classnames('', { break: this.state.isBreak })}>
+          <p className={classnames('session', { break: this.state.isBreak })}>
             {this.state.display}
           </p>
           <span className='date'>
@@ -146,6 +148,7 @@ class Clock extends Component {
             <i className='fas fa-redo'></i>
           </span>
         </div>
+        <audio id='bell' src='sounds/bell.mp3'></audio>
       </>
     );
   }
