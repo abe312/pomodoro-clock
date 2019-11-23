@@ -1,0 +1,14 @@
+.header {
+  font-size: 2.5rem;
+
+  /* margin-bottom: -5%; */
+  text-align: center;
+  color: #c7c7c7;
+  margin-top: 5%;
+}
+
+@media (max-width: 568px) {
+  .header {
+    margin-bottom: 7%;
+  }
+}

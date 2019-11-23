@@ -1,0 +1,24 @@
+.break,
+.session {
+  width: 45%;
+  font-size: 1.2rem;
+  font-weight: bolder;
+}
+.controls .control {
+  display: inline-block;
+  text-align: center;
+
+  &__button {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  span.digit {
+    font-size: 1.3rem;
+    font-weight: bolder;
+  }
+  i {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}

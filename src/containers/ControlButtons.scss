@@ -1,0 +1,13 @@
+.control-buttons {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 2rem;
+
+  span {
+    display: inline-block;
+    margin: 15px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
