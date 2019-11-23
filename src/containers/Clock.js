@@ -1,39 +1,31 @@
 import React, { Component } from 'react';
 import './Clock.scss';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 class Clock extends Component {
   state = {
     minutes: 25,
     seconds: 0,
     isBreak: false,
+    isPaused: false,
+    display: 'Session',
   };
+  componentWillReceiveProps(newProps) {
+    this.clear();
+    this.setState({
+      ...this.state,
+      minutes: newProps.controls.session,
+      seconds: 0,
+      isPaused: false,
+      isBreak: false,
+      display: 'Session',
+    });
+  }
+  componentWillUnmount() {
+    this.clear();
+  }
   componentDidMount() {
-    const secondHand = document.querySelector('.second-hand');
-    const minsHand = document.querySelector('.min-hand');
-    const hourHand = document.querySelector('.hour-hand');
-
-    function setDate() {
-      const now = new Date();
-
-      const seconds = now.getSeconds();
-      const secondsDegrees = (seconds / 60) * 360 + 90;
-
-      secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
-
-      const mins = now.getMinutes();
-      const minsDegrees = (mins / 60) * 360 + (seconds / 60) * 6 + 90;
-      minsHand.style.transform = `rotate(${minsDegrees}deg)`;
-
-      const hour = now.getHours();
-      const hourDegrees = (hour / 12) * 360 + (mins / 60) * 30 + 90;
-      hourHand.style.transform = `rotate(${hourDegrees}deg)`;
-    }
-
-    setInterval(setDate, 1000);
-
-    setDate();
-
     // auto scroll to the clock on mobile screens
     window.onload = function() {
       setTimeout(() => {
@@ -48,59 +40,100 @@ class Clock extends Component {
 
       if (timeRemaining >= 0) {
         let minutes = parseInt(timeRemaining / 60);
-        let seconds = parseInt(timeRemaining);
+        let seconds = parseInt(timeRemaining % 60);
         that.setState({ ...that.state, minutes, seconds, isBreak });
-        console.log('in breaks', minutes, seconds);
+        if (isBreak) console.log('in breaks', minutes, seconds);
+        else console.log('in session', minutes, seconds);
       } else {
         // this.props.setSession();
-        this.setSessionTime();
+        // this.setSessionTime();
+        if (isBreak) {
+          that.clear();
+          that.setSessionTime();
+        } else {
+          that.clear();
+          that.setBreakTime();
+        }
       }
     };
   }
   setBreakTime = () => {
     let date = new Date();
+    let breakEndDate;
+    this.setState({ ...this.state, display: 'Break' });
+    if (this.state.isPaused) {
+      console.log('setbreak if');
+      breakEndDate = new Date(
+        date.getTime() + 60000 * this.state.minutes + 1000 * this.state.seconds
+      );
+    } else {
+      console.log('setbreak else');
+      breakEndDate = new Date(
+        date.getTime() + 60000 * this.props.controls.breakL
+      );
+    }
 
-    let breakEndDate = new Date(
-      date.getTime() + 60000 * this.props.controls.breakL
-    );
-    window.breakI = setInterval(window.calculate(breakEndDate, true), 1000);
+    window.breakI = setInterval(function() {
+      window.calculate(breakEndDate, true);
+    }, 1000);
   };
   setSessionTime = () => {
     let date = new Date();
-
-    let sessionEndDate = new Date(
-      date.getTime() + 60000 * this.props.controls.session
-    );
-    window.sessionI = setInterval(window.calculate(sessionEndDate), 1000);
+    let sessionEndDate;
+    this.setState({ ...this.state, display: 'Session' });
+    if (this.state.isPaused) {
+      console.log('setsession if');
+      sessionEndDate = new Date(
+        date.getTime() + 60000 * this.state.minutes + 1000 * this.state.seconds
+      );
+    } else {
+      console.log('setsession else');
+      sessionEndDate = new Date(
+        date.getTime() + 60000 * this.props.controls.session
+      );
+    }
+    window.sessionI = setInterval(function() {
+      window.calculate(sessionEndDate);
+    }, 1000);
   };
 
-  play = () => {
-    this.setSessionTime();
-  };
-  pause = () => {
+  clear = () => {
     clearInterval(window.sessionI);
     clearInterval(window.breakI);
   };
+  play = () => {
+    this.setSessionTime();
+    this.setState({ ...this.state, isPaused: false });
+  };
+  pause = () => {
+    this.clear();
+    this.setState({ ...this.state, isPaused: true });
+  };
+  reset = () => {
+    this.clear();
+    this.setState({
+      ...this.state,
+      minutes: this.props.controls.session,
+      seconds: 0,
+      isPaused: false,
+      isBreak: false,
+      display: 'Session',
+    });
+  };
 
   render() {
+    const { minutes, seconds } = this.state;
     return (
       <>
-        <div id='clock'>
-          <div className='clock-analog'>
-            <div className='clock'>
-              <div className='clock-face'>
-                <div className='hand min-hand'></div>
-                <div className='hand second-hand'></div>
-                <div className='hand hour-hand'></div>
-              </div>
-            </div>
-          </div>
-          <div className='clock-digital'>
-            <p>Break</p>
-            <span className='date'>
-              00 <span className='blink'>:</span> 00
-            </span>
-          </div>
+        <div className='clock-digital'>
+          <p className={classnames('', { break: this.state.isBreak })}>
+            {this.state.display}
+          </p>
+          <span className='date'>
+            {minutes < 10 ? '0' + minutes : minutes}{' '}
+            <span className='blink'>:</span>{' '}
+            {seconds < 10 ? '0' + seconds : seconds}
+          </span>
         </div>
         <div className='control-buttons'>
           <span onClick={this.play}>

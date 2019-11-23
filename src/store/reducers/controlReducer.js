@@ -3,14 +3,11 @@ import {
   BREAK_DECREASE,
   SESSION_INCREASE,
   SESSION_DECREASE,
-  SET_BREAK,
-  SET_SESSION,
 } from '../constants';
 
 const initialState = {
-  breakL: 1,
-  session: 1,
-  current: 'Break',
+  breakL: 5,
+  session: 25,
 };
 
 // const change(arr, op) {
@@ -31,7 +28,7 @@ const controlReducer = (state = initialState, action) => {
       } else return state;
     }
     case BREAK_DECREASE: {
-      if (state.breakL > 0) {
+      if (state.breakL > 1) {
         const breakL = state.breakL - 1;
         return { ...state, breakL };
       } else return state;
@@ -43,16 +40,10 @@ const controlReducer = (state = initialState, action) => {
       } else return state;
     }
     case SESSION_DECREASE: {
-      if (state.session > 0) {
+      if (state.session > 1) {
         const session = state.session - 1;
         return { ...state, session };
       } else return state;
-    }
-    case SET_BREAK: {
-      return { ...state, current: 'Break' };
-    }
-    case SET_SESSION: {
-      return { ...state, current: 'Session' };
     }
     default:
       return state;

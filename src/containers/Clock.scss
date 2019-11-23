@@ -1,64 +1,12 @@
 .clock-digital {
-  text-align: center;
-  // margin-top: 50px;
-}
-.clock-analog {
-  margin-top: -5%;
-  // margin-bottom: -10%;
-}
-
-.clock {
-  width: 6rem;
-  height: 6rem;
-  border: 3px solid rgba(#e3e3e3, 0.6);
-  border-radius: 50%;
-  margin: 50px auto;
-  position: relative;
-  padding: 2rem;
-  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1), inset 0 0 0 3px rgba(#efefef, 0.4),
-    inset 0 0 10px black, 0 0 10px rgba(0, 0, 0, 0.2);
-}
-
-.clock-face {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform: translateY(-3px); /* account for the height of the clock hands */
-}
-
-.hand {
-  width: 50%;
-  height: 4px;
-  background: rgba(#e3e3e3, 0.3);
-  position: absolute;
-  top: 50%;
-  transform-origin: 100%;
-  transform: rotate(90deg);
-  transition: all 0.05s;
-  transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
-  &.min-hand {
-    height: 6px;
-  }
-  &.hour-hand {
-    height: 8px;
-  }
-}
-
-.disable-transition {
-  -webkit-transition: none;
-  -moz-transition: none;
-  -o-transition: color 0 ease-in;
-  -ms-transition: none;
-  transition: none;
-}
-
-.clock-digital {
   border: 1px solid white;
   width: 40%;
   margin: auto;
+  margin-top: 10px;
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-radius: 5px;
+  text-align: center;
   span.date {
     font-size: 2rem;
   }
@@ -66,6 +14,9 @@
     font-weight: bolder;
     font-size: 1.2rem;
     margin-bottom: 2px;
+    &.break {
+      color: rgba(green, 0.9);
+    }
   }
 }
 
